@@ -51,4 +51,4 @@ for div in divs:
 with open("data.json", "w", encoding="utf-8") as json_file:
     json.dump(products, json_file, ensure_ascii=False, indent=4)
 
-print("Data has been written to data.json")
+print(f"Successfully extracted {len(products)} products and saved to data.json")
