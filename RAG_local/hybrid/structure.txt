@@ -1,0 +1,17 @@
+project_root/
+│
+├── requirements.txt
+├── config/
+│   └── config.py
+├── src/
+│   ├── __init__.py
+│   ├── embeddings/
+│   │   ├── __init__.py
+│   │   └── openai_embeddings.py
+│   ├── retrievers/
+│   │   ├── __init__.py
+│   │   ├── bm25_retriever.py
+│   │   ├── pinecone_retriever.py
+│   │   └── ensemble_retriever.py
+│   └── main.py
+└── README.md
