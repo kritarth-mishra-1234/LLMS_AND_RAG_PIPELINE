@@ -1,0 +1,4 @@
+{'text': 'I love fruit juice', 'score': np.float64(0.5493061443340549)}
+{'text': 'Apples and oranges are fruits', 'score': 0.4287141265}
+{'text': 'I like apples', 'score': 0.422786981}
+{'text': 'I like computers by Apple', 'score': np.float64(0.0)}

@@ -24,4 +24,7 @@ def get_pinecone_index():
                 region='us-east-1'
             )
         )
-    return pc.Index(my_index_name)
+    index = pc.Index(my_index_name)
+    # Wait for index to be ready
+    index.describe_index_stats()
+    return index

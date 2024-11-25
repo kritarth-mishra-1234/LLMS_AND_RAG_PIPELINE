@@ -6,7 +6,7 @@ from vector_store import get_pinecone_index, add_documents, similarity_search
 def pretty_print_docs(docs):
     """Helper function to print documents nicely."""
     print(f"\n{'-' * 100}\n".join(
-        [f"Document {i+1}:\n\n" + doc[0] for i, doc in enumerate(docs)]
+        [f"Document {i+1}:\n\n" + str(doc) for i, doc in enumerate(docs)]
     ))
 
 def main():
@@ -42,6 +42,13 @@ def main():
     
     # Print results
     print("\nRelevant documents found:")
+    os.makedirs('RAG_local/contextual_compression/output', exist_ok=True)
+    
+    # Modified output writing
+    with open('RAG_local/contextual_compression/output/contextual_compression_answer.txt', 'w') as file:
+        for i, doc in enumerate(relevant_docs, 1):
+            file.write(f"Document {i}:\n{str(doc)}\n{'-' * 100}\n")
+    
     pretty_print_docs(relevant_docs)
 
 if __name__ == "__main__":

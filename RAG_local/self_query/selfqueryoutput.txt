@@ -1,0 +1,5 @@
+Q: What are some red wines
+A: {'content': '', 'metadata': {'color': 'red', 'country': 'USA', 'grape': 'Cabernet Sauvignon', 'name': 'Opus One', 'rating': 96.0, 'year': 2018.0}}
+A: {'content': '', 'metadata': {'color': 'white', 'country': 'France', 'grape': 'Sémillon', 'name': "Château d'Yquem", 'rating': 98.0, 'year': 2015.0}}
+
+Q: What are two wines with a rating above 97

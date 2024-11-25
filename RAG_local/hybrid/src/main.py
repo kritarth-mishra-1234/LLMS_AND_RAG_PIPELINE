@@ -1,11 +1,13 @@
 # src/main.py
-from embeddings import openai_embeddings
-from retrievers import (
+from src.embeddings import openai_embeddings
+from src.retrievers import (
     bm25_retriever,
     pinecone_retriever,
     ensemble_retriever
 )
-
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 def main():
     # Sample documents
     doc_list = [
@@ -45,6 +47,10 @@ def main():
     for result in final_results:
         print(f"Text: {result['text']}")
         print(f"Score: {result['score']:.4f}\n")
+    
+    os.makedirs('RAG_local/hybrid/output', exist_ok=True)
+    with open('RAG_local/hybrid/output/hybrid_answer.txt', 'w') as file:
+        file.write('\n'.join(map(str, final_results)))
 
 if __name__ == "__main__":
     main()
