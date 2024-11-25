@@ -1,4 +1,3 @@
-# document_processor.py
 from typing import List, Dict, Any
 import os
 from config import CHUNK_SIZE, CHUNK_OVERLAP

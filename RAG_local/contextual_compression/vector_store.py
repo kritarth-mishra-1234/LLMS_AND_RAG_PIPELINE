@@ -1,4 +1,3 @@
-# vector_store.py
 import pinecone
 from pinecone import Pinecone, ServerlessSpec
 from typing import List, Dict, Any, Tuple

@@ -1,8 +1,7 @@
-# main.py
 import os
 from embeddings import embed_documents, embed_query
 from document_processor import process_documents
-from vector_store import init_pinecone, add_documents, similarity_search
+from vector_store import get_pinecone_index, add_documents, similarity_search
 
 def pretty_print_docs(docs):
     """Helper function to print documents nicely."""
@@ -27,7 +26,7 @@ def main():
     
     # Initialize Pinecone and get index
     print("Initializing Pinecone vector store...")
-    index = init_pinecone()
+    index = get_pinecone_index()
     
     # Add documents to vector store
     print("Adding documents to vector store...")

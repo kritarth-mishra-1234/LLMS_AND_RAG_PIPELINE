@@ -1,10 +1,9 @@
-# embeddings.py
 from typing import List
 import openai
 from config import OPENAI_API_KEY, EMBEDDING_MODEL
-
+from openai import OpenAI
 # Initialize OpenAI
-openai.api_key = OPENAI_API_KEY
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 def embed_documents(texts: List[str]) -> List[List[float]]:
     """Generate embeddings for a list of documents."""
@@ -12,7 +11,7 @@ def embed_documents(texts: List[str]) -> List[List[float]]:
     texts = [text.replace("\n", " ") for text in texts]
     
     try:
-        response = openai.Embedding.create(
+        response = client.embeddings.create(
             input=texts,
             model=EMBEDDING_MODEL
         )
@@ -27,7 +26,7 @@ def embed_query(text: str) -> List[float]:
     text = text.replace("\n", " ")
     
     try:
-        response = openai.Embedding.create(
+        response = client.embeddings.create(
             input=[text],
             model=EMBEDDING_MODEL
         )
