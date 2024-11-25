@@ -50,7 +50,7 @@ def openai_speech_to_text(audio_path):
 
 
 if __name__ == "__main__":
-    audio_file_path="/Users/adityam/Downloads/hindiAudiosTest/hi/1719_hi.wav"
+    audio_file_path="/Users/mohitmishra/Desktop/Yardstick_AI_work/llmapis/speech.mp3"
     print("enter 1 for sarvam ai and 2 for openai")
     choice=int(input())
     if choice==1:
