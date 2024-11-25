@@ -1,48 +1,93 @@
+# main.py
 import config
 from embeddings import get_embeddings
 from vector_store import init_pinecone, upsert_to_pinecone, query_pinecone
-from llm import generate_completions
-
-def process_query(query: str, n_hypotheticals: int = 4) -> List[Dict[str, Any]]:
+from document_loader import load_documents
+from text_splitter import process_documents
+from typing import List, Dict, Any, Tuple
+import os
+def process_and_store_documents(
+    file_paths: List[str],
+    chunk_size: int = 1000,
+    chunk_overlap: int = 0
+) -> List[Tuple[str, Dict[str, Any]]]:
     """
-    Process a query using hypothetical document embeddings.
+    Complete pipeline for processing documents and storing in vector database.
     
     Args:
-        query: Input query
-        n_hypotheticals: Number of hypothetical documents to generate
+        file_paths: List of paths to text files
+        chunk_size: Size of text chunks
+        chunk_overlap: Overlap between chunks
         
     Returns:
-        List of similar results
+        List of processed document chunks with metadata
     """
+    blog_posts_dir = "langchain_blog_posts"
+    file_paths = [
+        os.path.join(blog_posts_dir, "blog.langchain.dev_announcing-langsmith_.txt"),
+        os.path.join(blog_posts_dir, "blog.langchain.dev_benchmarking-question-answering-over-csv-data_.txt")
+    ]
     # Initialize Pinecone
     index = init_pinecone()
     
-    # Generate hypothetical documents
-    prompt = f"Please answer the following question as a single food item\nQuestion: {query}\nAnswer:"
-    hypothetical_docs = generate_completions(prompt, n=n_hypotheticals)
+    # Load and process documents
+    raw_docs = load_documents(file_paths)
+    processed_chunks = process_documents(raw_docs, chunk_size, chunk_overlap)
     
     # Get embeddings
-    hypothetical_embeddings = get_embeddings(hypothetical_docs)
+    texts = [chunk for chunk, _ in processed_chunks]
+    embeddings = get_embeddings(texts)
     
     # Store in Pinecone
-    upsert_to_pinecone(index, hypothetical_docs, hypothetical_embeddings)
+    metadata = [meta for _, meta in processed_chunks]
+    upsert_to_pinecone(index, texts, embeddings, metadata)
     
-    # Get query embedding and find similar items
+    return processed_chunks
+
+def search_documents(
+    query: str,
+    top_k: int = 3
+) -> List[Dict[str, Any]]:
+    """
+    Search for relevant document chunks.
+    
+    Args:
+        query: Search query
+        top_k: Number of results to return
+        
+    Returns:
+        List of relevant chunks with scores and metadata
+    """
+    index = init_pinecone()
     query_embedding = get_embeddings([query])[0]
-    similar_results = query_pinecone(index, query_embedding)
-    
-    return similar_results
+    return query_pinecone(index, query_embedding, top_k)
 
 def main():
     # Example usage
-    query = "What is McDonald's best selling item?"
-    results = process_query(query)
+    file_paths = [
+        '/content/blog_posts/blog.langchain.dev_announcing-langsmith_.txt',
+        '/content/blog_posts/blog.langchain.dev_benchmarking-question-answering-over-csv-data_.txt',
+        '/content/blog_posts/blog.langchain.dev_chat-loaders-finetune-a-chatmodel-in-your-voice_.txt'
+    ]
+    
+    # Process and store documents
+    processed_chunks = process_and_store_documents(
+        file_paths,
+        chunk_size=1000,
+        chunk_overlap=0
+    )
+    print(f"\nProcessed {len(processed_chunks)} document chunks")
+    
+    # Example search
+    query = "What is LangSmith?"
+    results = search_documents(query)
     
     print("\nQuery:", query)
-    print("\nSimilar results:")
+    print("\nRelevant document chunks:")
     for i, result in enumerate(results, 1):
         print(f"\n{i}. Score: {result['score']:.3f}")
-        print(f"   Text: {result['text']}")
+        print(f"   Text: {result['text'][:200]}...")
+        print(f"   Source: {result['metadata'].get('filename', 'Unknown')}")
 
 if __name__ == "__main__":
     main()

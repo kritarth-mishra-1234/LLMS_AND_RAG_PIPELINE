@@ -25,6 +25,12 @@ def openai_LLM():
         model="gpt-4o"
     )
     print(chat.choices[0].message.content)
+    # Add output saving
+    output_path = Path(os.getcwd()) / "outputs" / "gpt4o_response.txt"
+    output_path.parent.mkdir(exist_ok=True)
+    with open(output_path, "w") as f:
+        f.write(chat.choices[0].message.content)
+    print(f"Output saved to {output_path}")
 
 def groq_LLM():
     
@@ -45,6 +51,12 @@ def groq_LLM():
         ],
         model="llama3-8b-8192"
     )
+    # Add output saving
+    output_path = Path(os.getcwd()) / "outputs" / "llama3_response.txt"
+    output_path.parent.mkdir(exist_ok=True)
+    with open(output_path, "w") as f:
+        f.write(chat.choices[0].message.content)
+    print(f"Output saved to {output_path}")
     print(chat.choices[0].message.content)
 
 def claude_LLM():
@@ -67,6 +79,12 @@ def claude_LLM():
             },
         ],
     )
+    # Add output saving
+    output_path = Path(os.getcwd()) / "outputs" / "claude3_response.txt"
+    output_path.parent.mkdir(exist_ok=True)
+    with open(output_path, "w") as f:
+        f.write(str(message.content))
+    print(f"Output saved to {output_path}")
     print(message.content)
 
 #text to speech files
@@ -75,7 +93,7 @@ def claude_LLM():
 def openai_tts():
     client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
-    speech_file_path = Path(os.getcwd()).parent / "speech.mp3"
+    speech_file_path = Path(os.getcwd()).parent / "speechopenai.mp3"
     response = client.audio.speech.create(
         model="tts-1",
         voice="alloy",
@@ -98,11 +116,17 @@ def openai_tts_streaming():
 def openai_stt():
     client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
-    audio_file= open("/Users/mohitmishra/Desktop/Yardstick_AI_work/llmapis/speech.mp3", "rb")
+    audio_file= open("/Users/mohitmishra/Desktop/Yardstick_AI_work/llmapis/openai_client.mp3", "rb")
     transcription = client.audio.transcriptions.create(
         model="whisper-1", 
         file=audio_file
     )
+    # Add output saving
+    output_path = Path(os.getcwd()) / "outputs" / "openai_stt_response.txt"
+    output_path.parent.mkdir(exist_ok=True)
+    with open(output_path, "w") as f:
+        f.write(transcription.text)
+    print(f"Output saved to {output_path}")
     print(transcription.text)
 
 #text_to_image
@@ -117,11 +141,19 @@ def openai_text_to_image():
         quality="standard",
         n=1,
     )
+    # Save the image URL to a text file
+    output_path = Path(os.getcwd()) / "outputs" / "dalle3_image_url.txt"
+    output_path.parent.mkdir(exist_ok=True)
+    with open(output_path, "w") as f:
+        f.write(response.data[0].url)
+    print(f"Image URL saved to {output_path}")
     image_url = response.data[0].url   
 
 if __name__ == "__main__":
-    openai_LLM()
-    groq_LLM()
-    claude_LLM()
-    openai_tts()
-    openai_tts_streaming()
+    # openai_LLM()
+    # groq_LLM()
+    # #claude_LLM()
+    # openai_tts()
+    # openai_tts_streaming()
+    openai_stt()
+    openai_text_to_image()

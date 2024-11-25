@@ -6,7 +6,7 @@ import time
 
 # load_dotenv()
 
-def eleven_labs_text_to_speech(text, output_file):
+def eleven_labs_text_to_speech(text):
   
   api_key= os.environ.get("ELEVEN_LABS_API_KEY")
 #   CHUNK_SIZE = 1024
@@ -24,6 +24,7 @@ def eleven_labs_text_to_speech(text, output_file):
     "similarity_boost": 0.5
     }
   }
+  output_file="speechelevenlabs.mp3"
   start_time = time.time()
   response = requests.request("POST", url, json=payload, headers=headers)
   end_time = time.time()
@@ -34,7 +35,7 @@ def eleven_labs_text_to_speech(text, output_file):
                 f.write(chunk)
 
   return output_file
-def sarvam_ai_text_to_speech(text, output_file):
+def sarvam_ai_text_to_speech(text):
 
   url = "https://api.sarvam.ai/text-to-speech"
   api_key= os.environ.get("SARVAM_API_KEY")
@@ -50,6 +51,7 @@ def sarvam_ai_text_to_speech(text, output_file):
   "enable_preprocessing": True,
   "model": "bulbul:v1"
   }
+  output_file="speechsarvam.mp3"
   start_time = time.time()
   response = requests.request("POST", url, json=payload, headers=headers)
   end_time = time.time()
@@ -65,7 +67,7 @@ def sarvam_ai_text_to_speech(text, output_file):
 
 
 
-def text_to_speech(text,output_file):
+def text_to_speech(text):
     
     api_key= os.environ.get("OPENAI_API_KEY")
     headers = {
@@ -78,7 +80,7 @@ def text_to_speech(text,output_file):
         "model": "tts-1",
         "voice": "alloy"
     }
-
+    output_file="speechopenai.mp3"
     start_time = time.time()
     response = requests.post(
         "https://api.openai.com/v1/audio/speech",
@@ -99,12 +101,11 @@ def text_to_speech(text,output_file):
 
 if __name__ == "__main__":
     text="how are you"
-    output_file="speech.mp3"
     print("enter 1 for openai, 2 for eleven labs, 3 for sarvam ai")
     choice=int(input())
     if choice==1:
-        text_to_speech(text,output_file)
+        text_to_speech(text)
     elif choice==2:
-        eleven_labs_text_to_speech(text,output_file)
+        eleven_labs_text_to_speech(text)
     elif choice==3:
-        sarvam_ai_text_to_speech(text,output_file)
+        sarvam_ai_text_to_speech(text)

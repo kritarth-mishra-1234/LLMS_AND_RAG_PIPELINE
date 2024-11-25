@@ -1,0 +1,7 @@
+What a clever idea!
+
+Here's a haiku about recursion:
+
+Function calls itself
+Infinity in a loop, free
+Program's inner dance

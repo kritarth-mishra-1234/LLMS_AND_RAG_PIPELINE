@@ -1,10 +1,8 @@
-import openai
 import numpy as np
 from typing import List
 import config
-
-openai.api_key = config.OPENAI_API_KEY
-
+from openai import OpenAI
+client = OpenAI(api_key=config.OPENAI_API_KEY)
 def get_embeddings(texts: List[str]) -> np.ndarray:
     """
     Get embeddings for a list of texts using OpenAI's embedding model.
@@ -16,11 +14,11 @@ def get_embeddings(texts: List[str]) -> np.ndarray:
         numpy array of embeddings
     """
     try:
-        response = openai.Embedding.create(
+        response = client.embeddings.create(
             input=texts,
             model=config.EMBEDDING_MODEL
         )
-        return np.array([embedding.embedding for embedding in response['data']])
+        return np.array([embedding.embedding for embedding in response.data])
     except Exception as e:
         print(f"Error getting embeddings: {e}")
         raise

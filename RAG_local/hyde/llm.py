@@ -1,8 +1,7 @@
-import openai
+from openai import OpenAI
 from typing import List
 import config
-
-openai.api_key = config.OPENAI_API_KEY
+client = OpenAI(api_key=config.OPENAI_API_KEY)
 
 def generate_completions(
     prompt: str,
@@ -21,7 +20,7 @@ def generate_completions(
         List of generated completions
     """
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             n=n,

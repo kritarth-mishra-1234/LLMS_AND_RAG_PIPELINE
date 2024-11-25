@@ -59,7 +59,7 @@ def stability_ai_image(prompt):
   end_time = time.time()
   print(f"Time taken: {end_time - start_time} seconds")
   if response.status_code == 200:
-        with open("./lighthouse.webp", 'wb') as file:
+        with open("./stability_ai_response.webp", 'wb') as file:
           file.write(response.content)
   else:
       raise Exception(str(response.json()))

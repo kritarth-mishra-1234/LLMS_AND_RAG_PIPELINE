@@ -1,7 +1,7 @@
 import requests
 import os
 import time
-
+from pathlib import Path
 def chat_with_gpt(prompt, system_message="You are a helpful assistant."):
     api_key= os.environ.get("OPENAI_API_KEY")
     headers = {
@@ -27,7 +27,11 @@ def chat_with_gpt(prompt, system_message="You are a helpful assistant."):
     end_time = time.time()
     print(f"Time taken: {end_time - start_time} seconds")   
     response.raise_for_status()
-    
+    output_path = Path(os.getcwd()) / "outputs_text_to_text" / "gpt4_response.txt"
+    output_path.parent.mkdir(exist_ok=True)
+    with open(output_path, "w") as f:
+        f.write(response.json()["choices"][0]["message"]["content"])
+    print(f"Output saved to {output_path}")
     return response.json()["choices"][0]["message"]["content"]
 
 def chat_with_groq(prompt):
@@ -52,7 +56,11 @@ def chat_with_groq(prompt):
     end_time = time.time()
     print(f"Time taken: {end_time - start_time} seconds")
     response.raise_for_status()
-    
+    output_path = Path(os.getcwd()) / "outputs_text_to_text" / "llama3_response.txt"
+    output_path.parent.mkdir(exist_ok=True)
+    with open(output_path, "w") as f:
+        f.write(response.json()["choices"][0]["message"]["content"])
+    print(f"Output saved to {output_path}")
     return response.json()["choices"][0]["message"]["content"]
 
 # Usage example

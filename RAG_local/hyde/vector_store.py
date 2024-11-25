@@ -1,23 +1,22 @@
 import pinecone
 from typing import List, Dict, Any
 import config
-
+from pinecone import Pinecone, ServerlessSpec
+import numpy as np
+PINECONE_INDEX_NAME = config.INDEX_NAME
+pc=Pinecone(api_key=config.PINECONE_API_KEY)
 def init_pinecone():
-    """Initialize Pinecone with API key and environment."""
-    pinecone.init(
-        api_key=config.PINECONE_API_KEY,
-        environment=config.PINECONE_ENV
-    )
-    
-    # Create index if it doesn't exist
-    if config.INDEX_NAME not in pinecone.list_indexes():
-        pinecone.create_index(
-            name=config.INDEX_NAME,
-            dimension=config.DIMENSION,
-            metric='cosine'
+    if PINECONE_INDEX_NAME not in pc.list_indexes().names():
+        pc.create_index(
+            name=PINECONE_INDEX_NAME, 
+            dimension=1536, 
+            metric='cosine',
+            spec=ServerlessSpec(
+                cloud='aws',
+                region='us-east-1'
+            )
         )
-    
-    return pinecone.Index(config.INDEX_NAME)
+    return pc.Index(PINECONE_INDEX_NAME)
 
 def upsert_to_pinecone(
     index: pinecone.Index,

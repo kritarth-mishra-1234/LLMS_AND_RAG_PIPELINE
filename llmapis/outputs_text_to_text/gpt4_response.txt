@@ -1,0 +1,3 @@
+Loop within a loop,
+Echoes in code's deep expanse,
+Recursive, nonstop.
